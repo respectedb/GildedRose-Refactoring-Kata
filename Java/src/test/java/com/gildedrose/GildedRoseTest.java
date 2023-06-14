@@ -33,5 +33,20 @@ class GildedRoseTest {
         gildedRoseService.updateQuality(items);
         assertEquals(8, item.getQuality());
     }
+    
+    @ParameterizedTest
+    @CsvSource({"3, 13", "6, 12", "11, 11"})
+    void BACKSTAGE_PASSES_판매일별_퀄리티_증가(int sellIn, int dayQuality) {
+        List<Item> items = new ArrayList<>();
+        Item item = Item.builder().
+                name(Constants.BACKSTAGE_PASSES).
+                sellIn(sellIn).
+                quality(10).
+                build();
+        items.add(item);
+
+        gildedRoseService.updateQuality(items);
+        assertEquals(dayQuality, item.getQuality());
+    }
 
 }

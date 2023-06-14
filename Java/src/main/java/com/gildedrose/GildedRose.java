@@ -64,4 +64,8 @@ public class GildedRose {
 		int newQuality = Math.min(50, item.getQuality() + amount);
 		item.setQuality(newQuality);
 	}
+    
+    public int getTotalPrice(int price, int quantity, double discount) {
+    return (int) ((price * quantity) * (price * quantity) * (discount /100));
+}
 }

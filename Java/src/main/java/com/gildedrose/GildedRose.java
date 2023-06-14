@@ -65,7 +65,13 @@ public class GildedRose {
 		item.setQuality(newQuality);
 	}
     
-    public int getTotalPrice(int price, int quantity, double discount) {
-    return (int) ((price * quantity) * (price * quantity) * (discount /100));
+    public int getTotalFoodPrice(int price, int quantity, double discount) {
+        int totalPriceQuality = price * quantity;
+        return (int) (totalPriceQuantity - getDiscountPrice(discount, totalPriceQuantity));
+        
+    private double getDiscountPrice(double discount, int totalPriceQuantity) {
+    return totalPriceQuantity * (discount / 100);
+}
+        
 }
 }

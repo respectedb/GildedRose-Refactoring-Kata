@@ -1,62 +1,67 @@
-package com.gildedrose;
+import java.util.List;
 
-class GildedRose {
-    Item[] items;
+public class GildedRose {
 
-    public GildedRose(Item[] items) {
-        this.items = items;
-    }
+	public static final String BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert";
+	public static final String SULFURAS = "Sulfuras, Hand of Ragnaros";
+	public static final String AGED_BRIE = "Aged Brie";
+	
+	private List<Item> items = null;
 
-    public void updateQuality() {
-        for (int i = 0; i < items.length; i++) {
-            if (!items[i].name.equals("Aged Brie")
-                    && !items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                if (items[i].quality > 0) {
-                    if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                        items[i].quality = items[i].quality - 1;
-                    }
-                }
-            } else {
-                if (items[i].quality < 50) {
-                    items[i].quality = items[i].quality + 1;
+	public GildedRose(List<Item> items) {
+		this.items = items;
+	}
 
-                    if (items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (items[i].sellIn < 11) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1;
-                            }
-                        }
+	public void updateQuality() {
+		for (Item item : items) {
+			updateQuality(item);
+			updateSellIn(item);
+		}
+	}
 
-                        if (items[i].sellIn < 6) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1;
-                            }
-                        }
-                    }
-                }
-            }
+	private void updateQuality(Item item) {
+		if (GildedRose.AGED_BRIE.equals(item.getName())) {
+			if (item.getSellIn() > 0) {
+				increaseQuality(item, 1);
+			} else {
+				increaseQuality(item, 2);
+			}
+		} else if (GildedRose.BACKSTAGE.equals(item.getName())) {
+			if(item.getSellIn() > 10) {
+				increaseQuality(item, 1);
+			} else if (item.getSellIn() > 5) {
+				increaseQuality(item, 2);
+			} else if (item.getSellIn() > 0) {
+				increaseQuality(item, 3);
+			} else {
+				item.setQuality(0);
+			}
+		} else if(GildedRose.SULFURAS.equals(item.getName())){
+			
+		} else {
+			if (item.getSellIn() > 0) {
+				decreaseQuality(item, 1);
+			} else {
+				decreaseQuality(item, 2);
+			}
+		}
+	}
 
-            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                items[i].sellIn = items[i].sellIn - 1;
-            }
+	private void updateSellIn(Item item) {
+		if (GildedRose.SULFURAS.equals(item.getName()))
+			return;
+		
+		item.setSellIn(item.getSellIn() - 1);
+	}
 
-            if (items[i].sellIn < 0) {
-                if (!items[i].name.equals("Aged Brie")) {
-                    if (!items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (items[i].quality > 0) {
-                            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                                items[i].quality = items[i].quality - 1;
-                            }
-                        }
-                    } else {
-                        items[i].quality = items[i].quality - items[i].quality;
-                    }
-                } else {
-                    if (items[i].quality < 50) {
-                        items[i].quality = items[i].quality + 1;
-                    }
-                }
-            }
-        }
-    }
+	private void decreaseQuality(Item item, int amount) {
+		int newQuality = Math.max(0, item.getQuality() - amount);
+		item.setQuality(newQuality);
+	}
+
+	private void increaseQuality(Item item, int amount) {
+		int newQuality = Math.min(50, item.getQuality() + amount);
+		item.setQuality(newQuality);
+	}
+
 }
